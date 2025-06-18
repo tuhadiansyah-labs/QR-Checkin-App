@@ -1,45 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import React, { useState } from "react";
+import Scanner from "./Scanner";
 
-export default function Scanner({ onScan }) {
-  const scannerRef = useRef(null);
-  const [scanning, setScanning] = useState(false);
+export default function App() {
+  const [result, setResult] = useState("Waiting for scan...");
 
-  useEffect(() => {
-    if (!scannerRef.current) return;
-
-    const html5QrCode = new Html5Qrcode(scannerRef.current.id);
-
-    html5QrCode
-      .start(
-        { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: 250,
-        },
-        (decodedText) => {
-          onScan(decodedText);
-          html5QrCode.pause();
-          setTimeout(() => html5QrCode.resume(), 2000);
-        }
-      )
-      .then(() => setScanning(true))
-      .catch((err) => {
-        console.error("Unable to start scanning:", err);
-      });
-
-    return () => {
-      if (scanning) {
-        html5QrCode.stop().catch((err) => console.error("Failed to stop scanner", err));
-      }
-    };
-  }, [onScan, scanning]);
+  function handleScan(data) {
+    // Simulate validation logic
+    setResult(`✅ Scanned: ${data}`);
+  }
 
   return (
     <div
-      id="reader"
-      ref={scannerRef}
-      style={{ width: '500px', height: '500px', margin: 'auto' }}
-    ></div>
+      style={{
+        fontFamily: "Arial, sans-serif",
+        textAlign: "center",
+        padding: 20,
+        color: "#fff",
+        backgroundColor: "#000",
+        minHeight: "100vh",
+      }}
+    >
+      <h2>QR Code Check-in Scanner</h2>
+      <Scanner onScan={handleScan} />
+      <div
+        id="result"
+        style={{
+          marginTop: 20,
+          fontSize: 22,
+          minHeight: 30,
+        }}
+      >
+        {result}
+      </div>
+    </div>
   );
 }
