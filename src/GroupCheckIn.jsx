@@ -1,5 +1,6 @@
-import { Container, Typography, Box, Button, List, ListItem, ListItemText, ListItemSecondaryAction, Divider, Stack } from '@mui/material';
+import { Container, Typography, Box, Button, List, ListItem, ListItemText, Divider, Stack, CircularProgress } from '@mui/material';
 import QrReader from './components/QrReader';
+import ConfirmationPage from './components/ConfirmationPage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -13,11 +14,20 @@ function extractGroupId(qrText) {
   return null;
 }
 
+function extractTicketId(qrText) {
+  const match = qrText.match(/Ticket ID:\s*(.+)/);
+  if (match) {
+    return match[1].trim();
+  }
+  return null;
+}
+
 function GroupCheckIn() {
   const navigate = useNavigate();
   const [groupGuests, setGroupGuests] = useState(null);
   const [groupId, setGroupId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [confirmation, setConfirmation] = useState(null); // {status, message, error}
 
   const handleScan = (qrText) => {
     const groupId = extractGroupId(qrText);
@@ -45,7 +55,15 @@ function GroupCheckIn() {
       });
   };
 
-  const handleCheckIn = (ticketId) => {
+  const handleCheckIn = (qrTextOrTicketId) => {
+    let ticketId = qrTextOrTicketId;
+    if (typeof qrTextOrTicketId === 'string' && qrTextOrTicketId.includes('Ticket ID:')) {
+      ticketId = extractTicketId(qrTextOrTicketId);
+    }
+    if (!ticketId) {
+      setConfirmation({ status: 'error', message: 'Ticket ID not found in QR code!' });
+      return;
+    }
     setLoading(true);
     fetch(WEB_APP_URL, {
       method: 'POST',
@@ -55,16 +73,26 @@ function GroupCheckIn() {
       .then(res => res.json())
       .then(result => {
         setLoading(false);
-        if (result.status === 'success' || result.status === 'already_checked_in') {
-          // Refresh group data
-          handleScan(groupId);
+        if (result.status === 'success') {
+          setConfirmation({ status: 'success', message: 'Check-in successful!' });
+          // Refresh group data after a short delay
+          setTimeout(() => {
+            setConfirmation(null);
+            handleScan(groupId);
+          }, 1500);
+        } else if (result.status === 'already_checked_in') {
+          setConfirmation({ status: 'error', message: 'Ticket already checked in!' });
+          setTimeout(() => {
+            setConfirmation(null);
+            handleScan(groupId);
+          }, 1500);
         } else {
-          alert('Check-in failed.');
+          setConfirmation({ status: 'error', message: 'Check-in failed.' });
         }
       })
       .catch(() => {
         setLoading(false);
-        alert('Network error.');
+        setConfirmation({ status: 'error', message: 'Network error.' });
       });
   };
 
@@ -89,9 +117,16 @@ function GroupCheckIn() {
         <Typography variant="body1" gutterBottom>
           Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
         </Typography>
-        {!groupGuests && <QrReader onScan={handleScan} />}
-        {loading && <Typography sx={{ mt: 2 }}>Loading...</Typography>}
-        {groupGuests && (
+        {loading && <CircularProgress sx={{ mt: 4 }} />}
+        {!loading && !groupGuests && <QrReader onScan={handleScan} />}
+        {confirmation && (
+          <ConfirmationPage
+            status={confirmation.status}
+            message={confirmation.message}
+            onBack={() => setConfirmation(null)}
+          />
+        )}
+        {groupGuests && !confirmation && (
           <Box sx={{ mt: 3, width: '100%' }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
               <Typography variant="h6">Guests in Group</Typography>
@@ -100,18 +135,17 @@ function GroupCheckIn() {
             <List>
               {groupGuests.map((guest, idx) => (
                 <div key={guest[1]}>
-                  <ListItem>
+                  <ListItem
+                    secondaryAction={
+                      guest[5] === 'Yes'
+                        ? <Button variant="outlined" size="small" disabled>Checked In</Button>
+                        : <Button variant="contained" size="small" onClick={() => handleCheckIn(guest[1])}>Check In</Button>
+                    }
+                  >
                     <ListItemText
                       primary={guest[2]}
                       secondary={`Ticket ID: ${guest[1]} | Checked In: ${guest[5] === 'Yes' ? 'Yes' : 'No'}`}
                     />
-                    <ListItemSecondaryAction>
-                      {guest[5] === 'Yes' ? (
-                        <Button variant="outlined" size="small" disabled>Checked In</Button>
-                      ) : (
-                        <Button variant="contained" size="small" onClick={() => handleCheckIn(guest[1])}>Check In</Button>
-                      )}
-                    </ListItemSecondaryAction>
                   </ListItem>
                   {idx < groupGuests.length - 1 && <Divider />}
                 </div>
