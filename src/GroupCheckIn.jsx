@@ -4,7 +4,8 @@ import ConfirmationPage from './components/ConfirmationPage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxLDOFzm6j2wtESUH8rj0AyHY9hA8TsEMPWax54Mjk0wBke48DrUh1X9ncSftwNGgpt/exec';
+const GROUP_API_URL = 'https://getticketsbygroupid-4faso3ggca-uc.a.run.app';
+const CHECKIN_API_URL = 'https://checkinticket-4faso3ggca-uc.a.run.app';
 
 function extractGroupId(qrText) {
   const match = qrText.match(/Group:\s*(.+)/);
@@ -32,26 +33,26 @@ function GroupCheckIn() {
   const handleScan = (qrText) => {
     const groupId = extractGroupId(qrText);
     if (!groupId) {
-      alert('Group ID not found in QR code!');
+      setConfirmation({ status: 'error', message: 'Group ID not found in QR code!' });
       return;
     }
     setLoading(true);
-    fetch(`${WEB_APP_URL}?groupId=${encodeURIComponent(groupId)}`)
+    fetch(`${GROUP_API_URL}?groupId=${encodeURIComponent(groupId)}`)
       .then(res => res.json())
       .then(result => {
         setLoading(false);
-        if (result.status === 'success') {
-          setGroupGuests(result.rows);
+        if (result.status === 'success' && Array.isArray(result.tickets)) {
+          setGroupGuests(result.tickets);
           setGroupId(groupId);
         } else {
           setGroupGuests([]);
           setGroupId(groupId);
-          alert('Group not found!');
+          setConfirmation({ status: 'error', message: 'Group not found!', error: JSON.stringify(result) });
         }
       })
-      .catch(() => {
+      .catch((err) => {
         setLoading(false);
-        alert('Network error.');
+        setConfirmation({ status: 'error', message: 'Network error.', error: err?.message });
       });
   };
 
@@ -65,28 +66,28 @@ function GroupCheckIn() {
       return;
     }
     setLoading(true);
-    fetch(WEB_APP_URL, {
+    fetch(CHECKIN_API_URL, {
       method: 'POST',
       body: JSON.stringify({ ticketId }),
       headers: { 'Content-Type': 'application/json' }
     })
       .then(res => res.json())
-      .then(result => {
+      .then(data => {
         setLoading(false);
-        if (result.status === 'success') {
+        if (data.status === 'success') {
           setConfirmation({ status: 'success', message: 'Check-in successful!' });
           setTimeout(() => {
             setConfirmation(null);
             handleScan(groupId);
           }, 1500);
-        } else if (result.status === 'already_checked_in') {
+        } else if (data.status === 'already_checked_in') {
           setConfirmation({ status: 'error', message: 'Ticket already checked in!' });
           setTimeout(() => {
             setConfirmation(null);
             handleScan(groupId);
           }, 1500);
         } else {
-          setConfirmation({ status: 'error', message: 'Check-in failed.', error: JSON.stringify(result) });
+          setConfirmation({ status: 'error', message: 'Check-in failed.', error: JSON.stringify(data) });
         }
       })
       .catch((err) => {
@@ -97,11 +98,29 @@ function GroupCheckIn() {
 
   const handleCheckInAll = () => {
     if (!groupGuests) return;
-    const notCheckedIn = groupGuests.filter(g => g[5] !== 'Yes');
-    if (notCheckedIn.length === 0) return;
-    notCheckedIn.forEach((guest, idx) => {
-      setTimeout(() => handleCheckIn(guest[1]), idx * 200); // Stagger requests
-    });
+    setLoading(true);
+    fetch(CHECKIN_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ groupId }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setLoading(false);
+        if (data.status === 'success') {
+          setConfirmation({ status: 'success', message: 'All guests checked in!' });
+          setTimeout(() => {
+            setConfirmation(null);
+            handleScan(groupId);
+          }, 1500);
+        } else {
+          setConfirmation({ status: 'error', message: 'Group check-in failed.', error: JSON.stringify(data) });
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        setConfirmation({ status: 'error', message: 'Network error.', error: err?.message });
+      });
   };
 
   return (
@@ -134,17 +153,17 @@ function GroupCheckIn() {
             </Stack>
             <List>
               {groupGuests.map((guest, idx) => (
-                <div key={guest[1]}>
+                <div key={guest.ticketId || guest[1]}>
                   <ListItem
                     secondaryAction={
-                      guest[5] === 'Yes'
+                      guest.checkedIn === 'Yes' || guest[5] === 'Yes'
                         ? <Button variant="outlined" size="small" disabled>Checked In</Button>
-                        : <Button variant="contained" size="small" onClick={() => handleCheckIn(guest[1])}>Check In</Button>
+                        : <Button variant="contained" size="small" onClick={() => handleCheckIn(guest.ticketId || guest[1])}>Check In</Button>
                     }
                   >
                     <ListItemText
-                      primary={guest[2]}
-                      secondary={`Ticket ID: ${guest[1]} | Checked In: ${guest[5] === 'Yes' ? 'Yes' : 'No'}`}
+                      primary={guest.name || guest[2]}
+                      secondary={`Ticket ID: ${guest.ticketId || guest[1]} | Checked In: ${(guest.checkedIn || guest[5]) === 'Yes' ? 'Yes' : 'No'}`}
                     />
                   </ListItem>
                   {idx < groupGuests.length - 1 && <Divider />}

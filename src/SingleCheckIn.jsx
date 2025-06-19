@@ -1,9 +1,10 @@
 import { Container, Typography, Box, Button, CircularProgress } from '@mui/material';
 import QrReader from './components/QrReader';
+import ConfirmationPage from './components/ConfirmationPage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyA6EkqwKWxngNpO4U8WAXrHxU7rPyX0BaQIB9cVTvwMB3s2_xycMC-jB-Xecox9F0E/exec';
+const CHECKIN_API_URL = 'https://checkinticket-4faso3ggca-uc.a.run.app';
 
 function extractTicketId(qrText) {
   const match = qrText.match(/Ticket ID:\s*(.+)/);
@@ -16,15 +17,16 @@ function extractTicketId(qrText) {
 function SingleCheckIn() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [confirmation, setConfirmation] = useState(null); // {status, message, error}
 
   const handleScan = (qrText) => {
     const ticketId = extractTicketId(qrText);
     if (!ticketId) {
-      alert('Ticket ID not found in QR code!');
+      setConfirmation({ status: 'error', message: 'Ticket ID not found in QR code!' });
       return;
     }
     setLoading(true);
-    fetch(WEB_APP_URL, {
+    fetch(CHECKIN_API_URL, {
       method: 'POST',
       body: JSON.stringify({ ticketId }),
       headers: { 'Content-Type': 'application/json' }
@@ -32,12 +34,17 @@ function SingleCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        // TODO: Show confirmation page here
-        alert(JSON.stringify(data));
+        if (data.status === 'success') {
+          setConfirmation({ status: 'success', message: 'Check-in successful!' });
+        } else if (data.status === 'already_checked_in') {
+          setConfirmation({ status: 'error', message: 'Ticket already checked in!' });
+        } else {
+          setConfirmation({ status: 'error', message: 'Check-in failed.', error: JSON.stringify(data) });
+        }
       })
-      .catch(() => {
+      .catch((err) => {
         setLoading(false);
-        alert('Network error.');
+        setConfirmation({ status: 'error', message: 'Network error.', error: err?.message });
       });
   };
 
@@ -54,7 +61,15 @@ function SingleCheckIn() {
           Scan a ticket QR code to verify and check in a single guest.
         </Typography>
         {loading && <CircularProgress sx={{ mt: 4 }} />}
-        {!loading && <QrReader onScan={handleScan} />}
+        {!loading && !confirmation && <QrReader onScan={handleScan} />}
+        {confirmation && (
+          <ConfirmationPage
+            status={confirmation.status}
+            message={confirmation.message}
+            error={confirmation.error}
+            onBack={() => setConfirmation(null)}
+          />
+        )}
       </Box>
     </Container>
   );
