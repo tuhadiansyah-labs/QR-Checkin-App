@@ -38,10 +38,10 @@ function GroupCheckIn() {
     }
     setLoading(true);
     fetch(`${GROUP_API_URL}?groupId=${encodeURIComponent(groupId)}`)
-      .then(res => res.json())
-      .then(result => {
+      .then(res => res.json().then(result => ({ result, ok: res.ok })))
+      .then(({ result, ok }) => {
         setLoading(false);
-        if (result.status === 'success' && Array.isArray(result.tickets)) {
+        if (ok && Array.isArray(result.tickets)) {
           setGroupGuests(result.tickets);
           setGroupId(groupId);
         } else {
@@ -166,18 +166,18 @@ function GroupCheckIn() {
               <Button variant="contained" onClick={handleCheckInAll} size="small">Check In All</Button>
             </Stack>
             <List>
-              {groupGuests.map((guest, idx) => (
-                <div key={guest.ticketId || guest[1]}>
+              {groupGuests.map((ticket, idx) => (
+                <div key={ticket.ticketId}>
                   <ListItem
                     secondaryAction={
-                      guest.checkedIn === 'Yes' || guest[5] === 'Yes'
+                      ticket.checkedIn === 'TRUE'
                         ? <Button variant="outlined" size="small" disabled>Checked In</Button>
-                        : <Button variant="contained" size="small" onClick={() => handleCheckIn(guest.ticketId || guest[1])}>Check In</Button>
+                        : <Button variant="contained" size="small" onClick={() => handleCheckIn(ticket.ticketId)}>Check In</Button>
                     }
                   >
                     <ListItemText
-                      primary={guest.name || guest[2]}
-                      secondary={`Ticket ID: ${guest.ticketId || guest[1]} | Checked In: ${(guest.checkedIn || guest[5]) === 'Yes' ? 'Yes' : 'No'}`}
+                      primary={ticket.name}
+                      secondary={`Ticket ID: ${ticket.ticketId} | Checked In: ${ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}${ticket.checkInTime ? ` | Time: ${ticket.checkInTime}` : ''}`}
                     />
                   </ListItem>
                   {idx < groupGuests.length - 1 && <Divider />}
