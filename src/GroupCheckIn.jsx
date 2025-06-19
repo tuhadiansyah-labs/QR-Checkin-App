@@ -3,7 +3,15 @@ import QrReader from './components/QrReader';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyA6EkqwKWxngNpO4U8WAXrHxU7rPyX0BaQIB9cVTvwMB3s2_xycMC-jB-Xecox9F0E/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyQYn55b6Wn3JfV9bqzOPbzzWQQKt8d3G3d21osYCNHR-BQE_pnx_jWlvW7U3gwIhdj/exec';
+
+function extractGroupId(qrText) {
+  const match = qrText.match(/Group:\s*(.+)/);
+  if (match) {
+    return match[1].trim();
+  }
+  return null;
+}
 
 function GroupCheckIn() {
   const navigate = useNavigate();
@@ -11,23 +19,23 @@ function GroupCheckIn() {
   const [groupId, setGroupId] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleScan = (data) => {
-    if (!data) return;
+  const handleScan = (qrText) => {
+    const groupId = extractGroupId(qrText);
+    if (!groupId) {
+      alert('Group ID not found in QR code!');
+      return;
+    }
     setLoading(true);
-    fetch(WEB_APP_URL, {
-      method: 'POST',
-      body: JSON.stringify({ groupId: data }),
-      headers: { 'Content-Type': 'application/json' }
-    })
+    fetch(`${WEB_APP_URL}?groupId=${encodeURIComponent(groupId)}`)
       .then(res => res.json())
       .then(result => {
         setLoading(false);
         if (result.status === 'success') {
           setGroupGuests(result.rows);
-          setGroupId(data);
+          setGroupId(groupId);
         } else {
           setGroupGuests([]);
-          setGroupId(data);
+          setGroupId(groupId);
           alert('Group not found!');
         }
       })
