@@ -34,10 +34,14 @@ function SingleCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        if (data.status) {
-          setConfirmation({ status: 'success', message: 'Check-in successful!' });
-        } else if (data.status === 'already_checked_in') {
-          setConfirmation({ status: 'error', message: 'Ticket already checked in!' });
+        if (data.status === 'SUCCESS') {
+          setConfirmation({ status: 'success', message: data.message });
+        } else if (data.status === 'ALREADY_CHECKEDIN') {
+          setConfirmation({ status: 'error', message: data.message });
+        } else if (data.status === 'NOT_FOUND') {
+          setConfirmation({ status: 'error', message: data.message });
+        } else if (data.status === 'ERROR') {
+          setConfirmation({ status: 'error', message: data.message, error: JSON.stringify(data) });
         } else {
           setConfirmation({ status: 'error', message: 'Check-in failed.', error: JSON.stringify(data) });
         }

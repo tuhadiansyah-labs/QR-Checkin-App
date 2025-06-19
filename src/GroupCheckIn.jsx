@@ -74,18 +74,22 @@ function GroupCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        if (data.status) {
-          setConfirmation({ status: 'success', message: 'Check-in successful!' });
+        if (data.status === 'SUCCESS' || data.status === 'PARTIAL_SUCCESS') {
+          setConfirmation({ status: 'success', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
             handleScan(groupId);
           }, 1500);
-        } else if (data.status === 'already_checked_in') {
-          setConfirmation({ status: 'error', message: 'Ticket already checked in!' });
+        } else if (data.status === 'ALREADY_CHECKEDIN') {
+          setConfirmation({ status: 'error', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
             handleScan(groupId);
           }, 1500);
+        } else if (data.status === 'NOT_FOUND') {
+          setConfirmation({ status: 'error', message: data.message });
+        } else if (data.status === 'ERROR') {
+          setConfirmation({ status: 'error', message: data.message, error: JSON.stringify(data) });
         } else {
           setConfirmation({ status: 'error', message: 'Check-in failed.', error: JSON.stringify(data) });
         }
@@ -107,12 +111,22 @@ function GroupCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        if (data.status) {
-          setConfirmation({ status: 'success', message: 'All guests checked in!' });
+        if (data.status === 'SUCCESS') {
+          setConfirmation({ status: 'success', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
             handleScan(groupId);
           }, 1500);
+        } else if (data.status === 'PARTIAL_SUCCESS') {
+          setConfirmation({ status: 'success', message: data.message });
+          setTimeout(() => {
+            setConfirmation(null);
+            handleScan(groupId);
+          }, 1500);
+        } else if (data.status === 'NOT_FOUND') {
+          setConfirmation({ status: 'error', message: data.message });
+        } else if (data.status === 'ERROR') {
+          setConfirmation({ status: 'error', message: data.message, error: JSON.stringify(data) });
         } else {
           setConfirmation({ status: 'error', message: 'Group check-in failed.', error: JSON.stringify(data) });
         }
