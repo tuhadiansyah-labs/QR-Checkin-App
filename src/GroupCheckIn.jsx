@@ -4,7 +4,7 @@ import ConfirmationPage from './components/ConfirmationPage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyQYn55b6Wn3JfV9bqzOPbzzWQQKt8d3G3d21osYCNHR-BQE_pnx_jWlvW7U3gwIhdj/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxLDOFzm6j2wtESUH8rj0AyHY9hA8TsEMPWax54Mjk0wBke48DrUh1X9ncSftwNGgpt/exec';
 
 function extractGroupId(qrText) {
   const match = qrText.match(/Group:\s*(.+)/);
@@ -75,7 +75,6 @@ function GroupCheckIn() {
         setLoading(false);
         if (result.status === 'success') {
           setConfirmation({ status: 'success', message: 'Check-in successful!' });
-          // Refresh group data after a short delay
           setTimeout(() => {
             setConfirmation(null);
             handleScan(groupId);
@@ -87,12 +86,12 @@ function GroupCheckIn() {
             handleScan(groupId);
           }, 1500);
         } else {
-          setConfirmation({ status: 'error', message: 'Check-in failed.' });
+          setConfirmation({ status: 'error', message: 'Check-in failed.', error: JSON.stringify(result) });
         }
       })
-      .catch(() => {
+      .catch((err) => {
         setLoading(false);
-        setConfirmation({ status: 'error', message: 'Network error.' });
+        setConfirmation({ status: 'error', message: 'Network error.', error: err?.message });
       });
   };
 
@@ -123,6 +122,7 @@ function GroupCheckIn() {
           <ConfirmationPage
             status={confirmation.status}
             message={confirmation.message}
+            error={confirmation.error}
             onBack={() => setConfirmation(null)}
           />
         )}
