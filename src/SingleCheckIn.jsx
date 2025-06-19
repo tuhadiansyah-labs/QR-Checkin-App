@@ -34,7 +34,7 @@ function SingleCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        if (data.status === 'success') {
+        if (data.status) {
           setConfirmation({ status: 'success', message: 'Check-in successful!' });
         } else if (data.status === 'already_checked_in') {
           setConfirmation({ status: 'error', message: 'Ticket already checked in!' });

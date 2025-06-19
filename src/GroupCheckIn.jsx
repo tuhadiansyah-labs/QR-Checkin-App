@@ -74,7 +74,7 @@ function GroupCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        if (data.status === 'success') {
+        if (data.status) {
           setConfirmation({ status: 'success', message: 'Check-in successful!' });
           setTimeout(() => {
             setConfirmation(null);
@@ -107,7 +107,7 @@ function GroupCheckIn() {
       .then(res => res.json())
       .then(data => {
         setLoading(false);
-        if (data.status === 'success') {
+        if (data.status) {
           setConfirmation({ status: 'success', message: 'All guests checked in!' });
           setTimeout(() => {
             setConfirmation(null);
