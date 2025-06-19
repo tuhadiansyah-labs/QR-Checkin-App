@@ -1,40 +1,12 @@
-# QR Check-In App
+# React + Vite
 
-A modern, responsive mobile web app for QR-based event check-in. Built with React and Tailwind CSS.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- **Landing Page**: Choose between Single Check-In and Group Check-In.
-- **Single Check-In**: Scan and verify a single ticket via QR code.
-- **Group Check-In**: Scan a group QR code, see all group members, and check in individuals or all at once.
-- **Google Sheets Integration**: (Planned) Validate tickets and group info by connecting to a Google Sheet via Google Apps Script endpoint.
-- **Mobile-First Design**: Fully responsive and touch-friendly, works great on phones and tablets.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Tech Stack
-- React (Create React App)
-- Tailwind CSS
-- html5-qrcode for QR scanning
-- React Router for navigation
+## Expanding the ESLint configuration
 
-## Setup
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Start the development server:
-   ```bash
-   npm start
-   ```
-
-## Google Sheets Integration (Planned)
-- You will need to create a Google Apps Script web endpoint that exposes your event's ticket data as an API.
-- The app will call this endpoint to validate and check in tickets.
-- See [Google Apps Script documentation](https://developers.google.com/apps-script/guides/web) for best practices.
-
-## Customization
-- Update the UI and logic in `src/SingleCheckIn.js` and `src/GroupCheckIn.js` as needed.
-- Tailwind CSS is used for all styling.
-
-## License
-MIT
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
