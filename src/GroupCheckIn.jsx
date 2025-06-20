@@ -155,7 +155,7 @@ function GroupCheckIn() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box sx={{ width: '100%', maxWidth: 480, flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2 }}>
+      <Box sx={{ width: '100%', maxWidth: 480, flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2, minHeight: 0 }}>
         {(!groupGuests && !confirmation) && (
           <Typography variant="body1" gutterBottom>
             Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
@@ -172,7 +172,7 @@ function GroupCheckIn() {
           />
         )}
         {groupGuests && !confirmation && (
-          <Box sx={{ mt: 3, width: '100%', maxWidth: 480, overflowX: 'auto' }}>
+          <Box sx={{ mt: 3, width: '100%', maxWidth: 480, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2, ml: 2, mr: 2 }}>
               <Typography variant="h6" sx={{ ml: 1 }}>
                 Guests in Group
@@ -193,35 +193,37 @@ function GroupCheckIn() {
                 Check In All
               </Button>
             </Stack>
-            <List sx={{ width: '100%', maxWidth: 480 }}>
-              {groupGuests.map((ticket, idx) => (
-                <div key={ticket.ticketId}>
-                  <ListItem
-                    alignItems="flex-start"
-                    secondaryAction={
-                      ticket.checkedIn === 'TRUE'
-                        ? <Button variant="outlined" size="small" disabled>Checked In</Button>
-                        : <Button variant="contained" size="small" onClick={() => handleCheckIn(ticket.ticketId)}>Check In</Button>
-                    }
-                  >
-                    <ListItemText
-                      primary={
-                        <Box>
-                          <Typography variant="subtitle1" fontWeight={600}>Registrant: {ticket.name}</Typography>
-                          <Typography variant="body2">Email: {ticket.email}</Typography>
-                          <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
-                          <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
-                          {ticket.checkInTime && (
-                            <Typography variant="body2">Time: {ticket.checkInTime}</Typography>
-                          )}
-                        </Box>
+            <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', width: '100%' }}>
+              <List sx={{ width: '100%', maxWidth: 480 }}>
+                {groupGuests.map((ticket, idx) => (
+                  <div key={ticket.ticketId}>
+                    <ListItem
+                      alignItems="flex-start"
+                      secondaryAction={
+                        ticket.checkedIn === 'TRUE'
+                          ? <Button variant="outlined" size="small" disabled>Checked In</Button>
+                          : <Button variant="contained" size="small" onClick={() => handleCheckIn(ticket.ticketId)}>Check In</Button>
                       }
-                    />
-                  </ListItem>
-                  {idx < groupGuests.length - 1 && <Divider />}
-                </div>
-              ))}
-            </List>
+                    >
+                      <ListItemText
+                        primary={
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight={600}>Registrant: {ticket.name}</Typography>
+                            <Typography variant="body2">Email: {ticket.email}</Typography>
+                            <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
+                            <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
+                            {ticket.checkInTime && (
+                              <Typography variant="body2">Time: {ticket.checkInTime}</Typography>
+                            )}
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                    {idx < groupGuests.length - 1 && <Divider />}
+                  </div>
+                ))}
+              </List>
+            </Box>
             <Button
               variant="contained"
               size="small"
