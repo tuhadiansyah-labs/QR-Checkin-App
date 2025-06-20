@@ -32,6 +32,9 @@ function GroupCheckIn() {
   const [confirmation, setConfirmation] = useState(null); // {status, message, error}
   const [lastScannedQrText, setLastScannedQrText] = useState('');
 
+  // Helper to check if all guests are checked in
+  const allCheckedIn = groupGuests && groupGuests.length > 0 && groupGuests.every(ticket => ticket.checkedIn === 'TRUE');
+
   const handleScan = (qrText) => {
     setLastScannedQrText(qrText);
     const groupId = extractGroupId(qrText);
@@ -172,7 +175,19 @@ function GroupCheckIn() {
               <Typography variant="h6" sx={{ ml: 1 }}>
                 Guests in Group
               </Typography>
-              <Button variant="contained" onClick={handleCheckInAll} size="small" sx={{ mr: 1 }}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  if (allCheckedIn) {
+                    setConfirmation({ status: 'success', message: 'All guests are already checked in!' });
+                  } else {
+                    handleCheckInAll();
+                  }
+                }}
+                size="small"
+                sx={{ mr: 1 }}
+                disabled={allCheckedIn}
+              >
                 Check In All
               </Button>
             </Stack>
