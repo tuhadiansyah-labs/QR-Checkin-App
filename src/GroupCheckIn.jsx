@@ -158,7 +158,7 @@ function GroupCheckIn() {
         </AppBar>
         <Box sx={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2, minHeight: 0 }}>
           {(!groupGuests && !confirmation && !loading) && (
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="body1" gutterBottom align="center" sx={{ mx: { xs: 2, sm: 4 } }}>
               Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
             </Typography>
           )}

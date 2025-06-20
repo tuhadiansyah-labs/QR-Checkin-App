@@ -70,7 +70,7 @@ function SingleCheckIn() {
           {!confirmation && (
             <>
               {!loading && (
-                <Typography variant="body1" gutterBottom>
+                <Typography variant="body1" gutterBottom align="center" sx={{ mx: { xs: 2, sm: 4 } }}>
                   Scan a ticket QR code to verify and check in a single guest.
                 </Typography>
               )}
