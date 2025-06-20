@@ -6,12 +6,12 @@ import GroupCheckIn from './GroupCheckIn';
 function Landing() {
   const navigate = useNavigate();
   return (
-    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <Paper elevation={3} sx={{ p: 4, width: '100%', textAlign: 'center', borderRadius: 3 }}>
-        <Typography variant="h4" gutterBottom fontWeight={700}>
+    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', px: { xs: 1, sm: 2 } }}>
+      <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 }, width: '100%', maxWidth: 480, textAlign: 'center', borderRadius: 3, boxSizing: 'border-box' }}>
+        <Typography variant="h4" gutterBottom fontWeight={700} sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }}>
           QR Event Check-In
         </Typography>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
           Welcome! Please select a check-in mode:
         </Typography>
         <Box mt={4} display="flex" flexDirection="column" gap={2}>
