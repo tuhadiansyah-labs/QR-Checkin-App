@@ -1,8 +1,9 @@
-import { Container, Typography, Box, Button, List, ListItem, ListItemText, Divider, Stack, CircularProgress } from '@mui/material';
+import { Container, Typography, Box, Button, List, ListItem, ListItemText, Divider, Stack, CircularProgress, AppBar, Toolbar, IconButton } from '@mui/material';
 import QrReader from './components/QrReader';
 import ConfirmationPage from './components/ConfirmationPage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const GROUP_API_URL = 'https://getticketsbygroupid-4faso3ggca-uc.a.run.app';
 const CHECKIN_API_URL = 'https://checkinticket-4faso3ggca-uc.a.run.app';
@@ -138,14 +139,18 @@ function GroupCheckIn() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <Box sx={{ width: '100%', textAlign: 'left', mb: 2 }}>
-        <Button variant="outlined" onClick={() => navigate('/')}>Back to Home</Button>
-      </Box>
+    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: 0 }}>
+      <AppBar position="static" color="default" elevation={1} sx={{ mb: 3 }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="back">
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ flexGrow: 1, ml: 1 }}>
+            Group Check-In
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Box sx={{ width: '100%', textAlign: 'center' }}>
-        <Typography variant="h5" fontWeight={700} gutterBottom>
-          Group Check-In
-        </Typography>
         <Typography variant="body1" gutterBottom>
           Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
         </Typography>
