@@ -61,7 +61,6 @@ const QrReader = ({ onScan }) => {
 
   return (
     <div className="qr-reader">
-      <div className="debug-label">QR SCANNER DEBUG</div>
       <video ref={videoEl}></video>
       <div ref={qrBoxEl} className="qr-box">
         {cameraReady && (
