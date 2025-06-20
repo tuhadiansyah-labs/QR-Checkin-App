@@ -144,98 +144,100 @@ function GroupCheckIn() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: { xs: 0, sm: 2 } }}>
-      <AppBar position="static" color="default" elevation={1} sx={{ mb: 3 }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="back">
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1, ml: 1 }}>
-            Group Check-In
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box sx={{ width: '100%', maxWidth: 480, flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2, minHeight: 0 }}>
-        {(!groupGuests && !confirmation) && (
-          <Typography variant="body1" gutterBottom>
-            Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
-          </Typography>
-        )}
-        {loading && <CircularProgress sx={{ mt: 4 }} />}
-        {!loading && !groupGuests && <QrReader onScan={handleScan} />}
-        {confirmation && (
-          <ConfirmationPage
-            status={confirmation.status}
-            message={confirmation.message}
-            error={confirmation.error}
-            onBack={() => setConfirmation(null)}
-          />
-        )}
-        {groupGuests && !confirmation && (
-          <Box sx={{ mt: 3, width: '100%', maxWidth: 480, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2, ml: 2, mr: 2 }}>
-              <Typography variant="h6" sx={{ ml: 1 }}>
-                Guests in Group
-              </Typography>
+    <Box sx={{ minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', bgcolor: 'background.default' }}>
+      <Container maxWidth="sm" disableGutters sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: { xs: 0, sm: 2 }, width: '100%' }}>
+        <AppBar position="static" color="default" elevation={1} sx={{ mb: 3 }}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="back">
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ flexGrow: 1, ml: 1 }}>
+              Group Check-In
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box sx={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2, minHeight: 0 }}>
+          {(!groupGuests && !confirmation) && (
+            <Typography variant="body1" gutterBottom>
+              Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
+            </Typography>
+          )}
+          {loading && <CircularProgress sx={{ mt: 4 }} />}
+          {!loading && !groupGuests && <QrReader onScan={handleScan} />}
+          {confirmation && (
+            <ConfirmationPage
+              status={confirmation.status}
+              message={confirmation.message}
+              error={confirmation.error}
+              onBack={() => setConfirmation(null)}
+            />
+          )}
+          {groupGuests && !confirmation && (
+            <Box sx={{ mt: 3, flex: 1, width: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2, ml: 2, mr: 2 }}>
+                <Typography variant="h6" sx={{ ml: 1 }}>
+                  Guests in Group
+                </Typography>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    if (allCheckedIn) {
+                      setConfirmation({ status: 'success', message: 'All guests are already checked in!' });
+                    } else {
+                      handleCheckInAll();
+                    }
+                  }}
+                  size="small"
+                  sx={{ mr: 1 }}
+                  disabled={allCheckedIn}
+                >
+                  Check In All
+                </Button>
+              </Stack>
+              <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', width: '100%' }}>
+                <List sx={{ width: '100%' }}>
+                  {groupGuests.map((ticket, idx) => (
+                    <div key={ticket.ticketId}>
+                      <ListItem
+                        alignItems="flex-start"
+                        secondaryAction={
+                          ticket.checkedIn === 'TRUE'
+                            ? <Button variant="outlined" size="small" disabled>Checked In</Button>
+                            : <Button variant="contained" size="small" onClick={() => handleCheckIn(ticket.ticketId)}>Check In</Button>
+                        }
+                      >
+                        <ListItemText
+                          primary={
+                            <Box>
+                              <Typography variant="subtitle1" fontWeight={600}>Registrant: {ticket.name}</Typography>
+                              <Typography variant="body2">Email: {ticket.email}</Typography>
+                              <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
+                              <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
+                              {ticket.checkInTime && (
+                                <Typography variant="body2">Time: {ticket.checkInTime}</Typography>
+                              )}
+                            </Box>
+                          }
+                        />
+                      </ListItem>
+                      {idx < groupGuests.length - 1 && <Divider />}
+                    </div>
+                  ))}
+                </List>
+              </Box>
               <Button
                 variant="contained"
-                onClick={() => {
-                  if (allCheckedIn) {
-                    setConfirmation({ status: 'success', message: 'All guests are already checked in!' });
-                  } else {
-                    handleCheckInAll();
-                  }
-                }}
                 size="small"
-                sx={{ mr: 1 }}
-                disabled={allCheckedIn}
+                sx={{ mt: 2, ml: 2, mr: 2 }}
+                onClick={() => setGroupGuests(null)}
               >
-                Check In All
+                Scan Another Group
               </Button>
-            </Stack>
-            <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', width: '100%' }}>
-              <List sx={{ width: '100%', maxWidth: 480 }}>
-                {groupGuests.map((ticket, idx) => (
-                  <div key={ticket.ticketId}>
-                    <ListItem
-                      alignItems="flex-start"
-                      secondaryAction={
-                        ticket.checkedIn === 'TRUE'
-                          ? <Button variant="outlined" size="small" disabled>Checked In</Button>
-                          : <Button variant="contained" size="small" onClick={() => handleCheckIn(ticket.ticketId)}>Check In</Button>
-                      }
-                    >
-                      <ListItemText
-                        primary={
-                          <Box>
-                            <Typography variant="subtitle1" fontWeight={600}>Registrant: {ticket.name}</Typography>
-                            <Typography variant="body2">Email: {ticket.email}</Typography>
-                            <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
-                            <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
-                            {ticket.checkInTime && (
-                              <Typography variant="body2">Time: {ticket.checkInTime}</Typography>
-                            )}
-                          </Box>
-                        }
-                      />
-                    </ListItem>
-                    {idx < groupGuests.length - 1 && <Divider />}
-                  </div>
-                ))}
-              </List>
             </Box>
-            <Button
-              variant="contained"
-              size="small"
-              sx={{ mt: 2, ml: 2, mr: 2 }}
-              onClick={() => setGroupGuests(null)}
-            >
-              Scan Another Group
-            </Button>
-          </Box>
-        )}
-      </Box>
-    </Container>
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 }
 
