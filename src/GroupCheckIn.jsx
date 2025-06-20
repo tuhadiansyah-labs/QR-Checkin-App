@@ -144,7 +144,7 @@ function GroupCheckIn() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: 0 }}>
+    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: { xs: 0, sm: 2 } }}>
       <AppBar position="static" color="default" elevation={1} sx={{ mb: 3 }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="back">
@@ -155,8 +155,8 @@ function GroupCheckIn() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box sx={{ width: '100%', textAlign: 'center' }}>
-        {(!groupGuests || confirmation) && (
+      <Box sx={{ width: '100%', maxWidth: 480, flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2 }}>
+        {(!groupGuests && !confirmation) && (
           <Typography variant="body1" gutterBottom>
             Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
           </Typography>
@@ -172,7 +172,7 @@ function GroupCheckIn() {
           />
         )}
         {groupGuests && !confirmation && (
-          <Box sx={{ mt: 3, width: '100%' }}>
+          <Box sx={{ mt: 3, width: '100%', maxWidth: 480, overflowX: 'auto' }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2, ml: 2, mr: 2 }}>
               <Typography variant="h6" sx={{ ml: 1 }}>
                 Guests in Group
@@ -193,7 +193,7 @@ function GroupCheckIn() {
                 Check In All
               </Button>
             </Stack>
-            <List>
+            <List sx={{ width: '100%', maxWidth: 480 }}>
               {groupGuests.map((ticket, idx) => (
                 <div key={ticket.ticketId}>
                   <ListItem

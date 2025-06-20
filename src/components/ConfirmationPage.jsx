@@ -16,7 +16,21 @@ const ErrorSVG = () => (
 
 export default function ConfirmationPage({ status, message, error, onBack }) {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 320, py: 4 }}>
+    <Box sx={{
+      minHeight: { xs: 320, sm: 400 },
+      width: '100%',
+      maxWidth: 400,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      mx: 'auto',
+      my: 'auto',
+      py: 4,
+      px: 2,
+      textAlign: 'center',
+      flex: 1
+    }}>
       <Box sx={{ mb: 2 }}>
         {status === 'success' ? <SuccessSVG /> : <ErrorSVG />}
       </Box>
@@ -24,7 +38,7 @@ export default function ConfirmationPage({ status, message, error, onBack }) {
         {message}
       </Typography>
       {error && (
-        <Typography color="error" align="center" sx={{ mt: 1 }}>
+        <Typography color="error" align="center" sx={{ mt: 1, wordBreak: 'break-all' }}>
           {error}
         </Typography>
       )}
