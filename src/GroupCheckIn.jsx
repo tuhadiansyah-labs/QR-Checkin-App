@@ -166,9 +166,13 @@ function GroupCheckIn() {
         )}
         {groupGuests && !confirmation && (
           <Box sx={{ mt: 3, width: '100%' }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-              <Typography variant="h6">Guests in Group</Typography>
-              <Button variant="contained" onClick={handleCheckInAll} size="small">Check In All</Button>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2, ml: 2, mr: 2 }}>
+              <Typography variant="h6" sx={{ ml: 1 }}>
+                Guests in Group
+              </Typography>
+              <Button variant="contained" onClick={handleCheckInAll} size="small" sx={{ mr: 1 }}>
+                Check In All
+              </Button>
             </Stack>
             <List>
               {groupGuests.map((ticket, idx) => (
@@ -198,7 +202,14 @@ function GroupCheckIn() {
                 </div>
               ))}
             </List>
-            <Button sx={{ mt: 2 }} onClick={() => setGroupGuests(null)}>Scan Another Group</Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{ mt: 2, ml: 2, mr: 2 }}
+              onClick={() => setGroupGuests(null)}
+            >
+              Scan Another Group
+            </Button>
           </Box>
         )}
       </Box>
