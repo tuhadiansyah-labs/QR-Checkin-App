@@ -30,8 +30,10 @@ function GroupCheckIn() {
   const [groupId, setGroupId] = useState('');
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState(null); // {status, message, error}
+  const [lastScannedQrText, setLastScannedQrText] = useState('');
 
   const handleScan = (qrText) => {
+    setLastScannedQrText(qrText);
     const groupId = extractGroupId(qrText);
     if (!groupId) {
       setConfirmation({ status: 'error', message: 'Group ID not found in QR code!' });
@@ -79,13 +81,13 @@ function GroupCheckIn() {
           setConfirmation({ status: 'success', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
-            handleScan(groupId);
+            handleScan(lastScannedQrText);
           }, 1500);
         } else if (data.status === 'ALREADY_CHECKEDIN') {
           setConfirmation({ status: 'error', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
-            handleScan(groupId);
+            handleScan(lastScannedQrText);
           }, 1500);
         } else if (data.status === 'NOT_FOUND') {
           setConfirmation({ status: 'error', message: data.message });
@@ -116,13 +118,13 @@ function GroupCheckIn() {
           setConfirmation({ status: 'success', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
-            handleScan(groupId);
+            handleScan(lastScannedQrText);
           }, 1500);
         } else if (data.status === 'PARTIAL_SUCCESS') {
           setConfirmation({ status: 'success', message: data.message });
           setTimeout(() => {
             setConfirmation(null);
-            handleScan(groupId);
+            handleScan(lastScannedQrText);
           }, 1500);
         } else if (data.status === 'NOT_FOUND') {
           setConfirmation({ status: 'error', message: data.message });
