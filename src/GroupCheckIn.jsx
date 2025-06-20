@@ -205,7 +205,8 @@ function GroupCheckIn() {
                     <ListItemText
                       primary={
                         <Box>
-                          <Typography variant="subtitle1" fontWeight={600}>{ticket.name}</Typography>
+                          <Typography variant="subtitle1" fontWeight={600}>Registrant: {ticket.name}</Typography>
+                          <Typography variant="body2">Email: {ticket.email}</Typography>
                           <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
                           <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
                           {ticket.checkInTime && (
