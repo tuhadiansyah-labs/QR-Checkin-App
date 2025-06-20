@@ -54,33 +54,41 @@ function SingleCheckIn() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: 0 }}>
-      <AppBar position="static" color="default" elevation={1} sx={{ mb: 3 }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="back">
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1, ml: 1 }}>
-            Single Check-In
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box sx={{ width: '100%', textAlign: 'center' }}>
-        <Typography variant="body1" gutterBottom>
-          Scan a ticket QR code to verify and check in a single guest.
-        </Typography>
-        {loading && <CircularProgress sx={{ mt: 4 }} />}
-        {!loading && !confirmation && <QrReader onScan={handleScan} />}
-        {confirmation && (
-          <ConfirmationPage
-            status={confirmation.status}
-            message={confirmation.message}
-            error={confirmation.error}
-            onBack={() => setConfirmation(null)}
-          />
-        )}
-      </Box>
-    </Container>
+    <Box sx={{ minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', bgcolor: 'background.default' }}>
+      <Container maxWidth="sm" disableGutters sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', px: { xs: 0, sm: 2 }, width: '100%' }}>
+        <AppBar position="static" color="default" elevation={1} sx={{ mb: 3 }}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={() => navigate('/')} aria-label="back">
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6" sx={{ flexGrow: 1, ml: 1 }}>
+              Single Check-In
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box sx={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2, minHeight: 0 }}>
+          {!confirmation && (
+            <>
+              {!loading && (
+                <Typography variant="body1" gutterBottom>
+                  Scan a ticket QR code to verify and check in a single guest.
+                </Typography>
+              )}
+              {loading && <CircularProgress sx={{ mt: 4 }} />}
+              {!loading && <QrReader onScan={handleScan} />}
+            </>
+          )}
+          {confirmation && (
+            <ConfirmationPage
+              status={confirmation.status}
+              message={confirmation.message}
+              error={confirmation.error}
+              onBack={() => setConfirmation(null)}
+            />
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 }
 
