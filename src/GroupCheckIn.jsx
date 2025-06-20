@@ -156,9 +156,11 @@ function GroupCheckIn() {
         </Toolbar>
       </AppBar>
       <Box sx={{ width: '100%', textAlign: 'center' }}>
-        <Typography variant="body1" gutterBottom>
-          Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
-        </Typography>
+        {(!groupGuests || confirmation) && (
+          <Typography variant="body1" gutterBottom>
+            Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
+          </Typography>
+        )}
         {loading && <CircularProgress sx={{ mt: 4 }} />}
         {!loading && !groupGuests && <QrReader onScan={handleScan} />}
         {confirmation && (
