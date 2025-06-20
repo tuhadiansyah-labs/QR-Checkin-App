@@ -47,11 +47,11 @@ function GroupCheckIn() {
       .then(res => res.json().then(result => ({ result, ok: res.ok })))
       .then(({ result, ok }) => {
         setLoading(false);
-        if (ok && Array.isArray(result.tickets)) {
+        if (ok && Array.isArray(result.tickets) && result.tickets.length > 0) {
           setGroupGuests(result.tickets);
           setGroupId(groupId);
         } else {
-          setGroupGuests([]);
+          setGroupGuests(null);
           setGroupId(groupId);
           setConfirmation({ status: 'error', message: 'Group not found!', error: JSON.stringify(result) });
         }
