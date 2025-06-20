@@ -9,6 +9,7 @@ const QrReader = ({ onScan }) => {
   const qrBoxEl = useRef(null);
   const [qrOn, setQrOn] = useState(true);
   const [scannedResult, setScannedResult] = useState("");
+  const [cameraReady, setCameraReady] = useState(false);
 
   useEffect(() => {
     if (videoEl.current && !scanner.current) {
@@ -36,30 +37,42 @@ const QrReader = ({ onScan }) => {
           setQrOn(false);
         });
     }
+    // Listen for when the video is ready
+    const video = videoEl.current;
+    if (video) {
+      const onPlay = () => setCameraReady(true);
+      video.addEventListener('playing', onPlay);
+      return () => {
+        video.removeEventListener('playing', onPlay);
+        scanner.current?.stop();
+      };
+    }
     return () => {
       scanner.current?.stop();
     };
   }, []);
 
   useEffect(() => {
-    if (!qrOn) {
+    if (!qrOn)
       alert(
         "Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload."
       );
-    }
   }, [qrOn]);
 
   return (
     <div className="qr-reader">
+      <div className="debug-label">QR SCANNER DEBUG</div>
       <video ref={videoEl}></video>
       <div ref={qrBoxEl} className="qr-box">
-        <img
-          src={QrFrame}
-          alt="Qr Frame"
-          width={256}
-          height={256}
-          className="qr-frame"
-        />
+        {cameraReady && (
+          <img
+            src={QrFrame}
+            alt="Qr Frame"
+            width={256}
+            height={256}
+            className="qr-frame"
+          />
+        )}
       </div>
       {scannedResult && (
         <p
