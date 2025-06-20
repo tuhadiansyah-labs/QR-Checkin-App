@@ -1,25 +1,63 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { Container, Box, Typography, Button, Paper } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import SingleCheckIn from './SingleCheckIn';
 import GroupCheckIn from './GroupCheckIn';
+import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
 
 function Landing() {
   const navigate = useNavigate();
   return (
-    <Container maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', px: { xs: 1, sm: 2 } }}>
-      <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 }, width: '100%', maxWidth: 480, textAlign: 'center', borderRadius: 3, boxSizing: 'border-box' }}>
+    <Box sx={{ minHeight: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2 }}>
+      <Box sx={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', py: { xs: 6, sm: 10 } }}>
         <Typography variant="h4" gutterBottom fontWeight={700} sx={{ fontSize: { xs: '2rem', sm: '2.5rem' } }}>
-          QR Event Check-In
+          QR Code Check-In
         </Typography>
-        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
-          Welcome! Please select a check-in mode:
+        <Typography variant="subtitle1" gutterBottom sx={{ fontSize: { xs: '1rem', sm: '1.25rem' }, mb: 4 }}>
+          Please select a check-in mode:
         </Typography>
-        <Box mt={4} display="flex" flexDirection="column" gap={2}>
-          <Button variant="contained" size="large" fullWidth onClick={() => navigate('/single')}>Single Check-In</Button>
-          <Button variant="outlined" size="large" fullWidth onClick={() => navigate('/group')}>Group Check-In</Button>
-        </Box>
-      </Paper>
-    </Container>
+        <Stack direction="row" spacing={3} justifyContent="center" alignItems="center" width="100%" maxWidth={400}>
+          <Button
+            variant="contained"
+            sx={{
+              borderRadius: 3,
+              width: 148,
+              height: 148,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontWeight: 600,
+              fontSize: '1.1rem',
+              p: 0
+            }}
+            onClick={() => navigate('/single')}
+          >
+            <PersonIcon sx={{ fontSize: 48, mb: 1 }} />
+            Single
+            <br />Check-In
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              borderRadius: 3,
+              width: 148,
+              height: 148,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontWeight: 600,
+              fontSize: '1.1rem',
+              p: 0
+            }}
+            onClick={() => navigate('/group')}
+          >
+            <GroupIcon sx={{ fontSize: 48, mb: 1 }} />
+            Group
+            <br />Check-In
+          </Button>
+        </Stack>
+      </Box>
+    </Box>
   );
 }
 
