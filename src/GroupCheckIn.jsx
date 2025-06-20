@@ -169,6 +169,7 @@ function GroupCheckIn() {
               {groupGuests.map((ticket, idx) => (
                 <div key={ticket.ticketId}>
                   <ListItem
+                    alignItems="flex-start"
                     secondaryAction={
                       ticket.checkedIn === 'TRUE'
                         ? <Button variant="outlined" size="small" disabled>Checked In</Button>
@@ -176,8 +177,16 @@ function GroupCheckIn() {
                     }
                   >
                     <ListItemText
-                      primary={ticket.name}
-                      secondary={`Ticket ID: ${ticket.ticketId} | Checked In: ${ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}${ticket.checkInTime ? ` | Time: ${ticket.checkInTime}` : ''}`}
+                      primary={
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight={600}>{ticket.name}</Typography>
+                          <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
+                          <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
+                          {ticket.checkInTime && (
+                            <Typography variant="body2">Time: {ticket.checkInTime}</Typography>
+                          )}
+                        </Box>
+                      }
                     />
                   </ListItem>
                   {idx < groupGuests.length - 1 && <Divider />}
