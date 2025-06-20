@@ -163,12 +163,12 @@ function GroupCheckIn() {
             </Typography>
           )}
           {loading && <CircularProgress sx={{ mt: 4 }} />}
-          {!loading && !groupGuests && <QrReader onScan={handleScan} />}
+          {!loading && !groupGuests && !confirmation && <QrReader onScan={handleScan} />}
           {confirmation && (
             <ConfirmationPage
               status={confirmation.status}
-              message={confirmation.message}
-              error={confirmation.error}
+              message={confirmation.status === 'error' && confirmation.message === 'Group not found!' ? 'Group not found!' : confirmation.message}
+              error={confirmation.status === 'error' && confirmation.message === 'Group not found!' ? undefined : confirmation.error}
               onBack={() => setConfirmation(null)}
             />
           )}
