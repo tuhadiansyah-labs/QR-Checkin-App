@@ -1,3 +1,13 @@
 <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="8" y="8" width="240" height="240" rx="24" stroke="#00E676" stroke-width="8" fill="none"/>
+  <!-- Top-left corner: from top → left -->
+  <path d="M64 8 A56 56 0 0 0 8 64" stroke="#3873cb" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Top-right corner: from top → right -->
+  <path d="M192 8 A56 56 0 0 1 248 64" stroke="#3873cb" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Bottom-right corner: from right → bottom -->
+  <path d="M248 192 A56 56 0 0 1 192 248" stroke="#3873cb" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Bottom-left corner: from bottom → left (corrected) -->
+  <path d="M8 192 A56 56 0 0 0 64 248" stroke="#3873cb" stroke-width="4" fill="none" stroke-linecap="round"/>
 </svg>
