@@ -19,7 +19,7 @@ function Landing() {
       try {
         setLoading(true);
         // Replace with your actual Firebase Functions URL
-        const response = await fetch('https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/getCheckInStats');
+        const response = await fetch('https://us-central1-qr-checkin-app-e599b.cloudfunctions.net/getCheckInStats');
         if (!response.ok) {
           throw new Error('Failed to fetch statistics');
         }
