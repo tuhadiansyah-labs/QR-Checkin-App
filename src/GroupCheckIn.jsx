@@ -270,11 +270,11 @@ function GroupCheckIn() {
                   ))}
                 </List>
               </Box>
-              <Box sx={{ flexShrink: 0, width: '100%' }}>
+              <Box sx={{ flexShrink: 0, width: '100%', mb: 2 }}>
                 <Button
                   variant="contained"
                   size="large"
-                  sx={{ mt: 2, mb: 2, ml: 2, mr: 2, py: 2, fontSize: '1.1rem', borderRadius: 2, width: 'calc(100% - 32px)' }}
+                  sx={{ mt: 2, ml: 2, mr: 2, py: 2, fontSize: '1.1rem', borderRadius: 2, width: 'calc(100% - 32px)' }}
                   onClick={() => setGroupGuests(null)}
                 >
                   Scan Another Group
