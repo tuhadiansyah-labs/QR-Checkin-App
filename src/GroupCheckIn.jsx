@@ -183,7 +183,17 @@ function GroupCheckIn() {
             />
           )}
           {groupGuests && !confirmation && (
-            <Box sx={{ mt: 3, flex: 1, width: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            <Box
+              sx={{
+                mt: 3,
+                flex: 1,
+                width: '100%',
+                minHeight: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                height: { xs: 'calc(100vh - 180px)', sm: 'auto' },
+              }}
+            >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2, ml: 2, mr: 2 }}>
                 <Typography variant="h6" sx={{ ml: 1 }}>
                   Guests in Group
@@ -204,7 +214,14 @@ function GroupCheckIn() {
                   Check In All
                 </Button>
               </Stack>
-              <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', width: '100%' }}>
+              <Box
+                sx={{
+                  flex: 1,
+                  minHeight: 0,
+                  overflowY: 'auto',
+                  width: '100%',
+                }}
+              >
                 <List sx={{ width: '100%' }}>
                   {groupGuests.map((ticket, idx) => (
                     <div key={ticket.ticketId}>
@@ -256,7 +273,7 @@ function GroupCheckIn() {
                 <Button
                   variant="contained"
                   size="large"
-                  sx={{ mt: 3, ml: 2, mr: 2, py: 2, fontSize: '1.1rem', borderRadius: 2, width: 'calc(100% - 32px)' }}
+                  sx={{ mt: 2, mb: 2, ml: 2, mr: 2, py: 2, fontSize: '1.1rem', borderRadius: 2, width: 'calc(100% - 32px)' }}
                   onClick={() => setGroupGuests(null)}
                 >
                   Scan Another Group
