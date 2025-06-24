@@ -220,6 +220,7 @@ function GroupCheckIn() {
                   minHeight: 0,
                   overflowY: 'auto',
                   width: '100%',
+                  pb: '80px',
                 }}
               >
                 <List sx={{ width: '100%' }}>
