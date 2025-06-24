@@ -174,7 +174,6 @@ function GroupCheckIn() {
             </>
           )}
           {loading && <CircularProgress sx={{ mt: 4 }} />}
-          {!loading && !groupGuests && !confirmation && <QrReader onScan={handleScan} />}
           {confirmation && (
             <ConfirmationPage
               status={confirmation.status}
