@@ -158,9 +158,20 @@ function GroupCheckIn() {
         </AppBar>
         <Box sx={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', pb: 2, minHeight: 0 }}>
           {(!groupGuests && !confirmation && !loading) && (
-            <Typography variant="body1" gutterBottom align="center" sx={{ mx: { xs: 2, sm: 4 } }}>
-              Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
-            </Typography>
+            <>
+              <Typography variant="body1" gutterBottom align="center" sx={{ mx: { xs: 2, sm: 4 } }}>
+                Scan a group QR code to retrieve all tickets for the group and check in guests individually or all at once.
+              </Typography>
+              <QrReader onScan={handleScan} />
+              <Button
+                variant="contained"
+                size="large"
+                sx={{ mt: 3, py: 2, fontSize: '1.1rem', borderRadius: 2 }}
+                onClick={() => navigate('/')}
+              >
+                Back to Home
+              </Button>
+            </>
           )}
           {loading && <CircularProgress sx={{ mt: 4 }} />}
           {!loading && !groupGuests && !confirmation && <QrReader onScan={handleScan} />}
@@ -207,14 +218,31 @@ function GroupCheckIn() {
                         }
                       >
                         <ListItemText
+                          sx={{ minWidth: 0, width: '100%' }}
                           primary={
-                            <Box>
-                              <Typography variant="subtitle1" fontWeight={600}>Registrant: {ticket.name}</Typography>
-                              <Typography variant="body2">Email: {ticket.email}</Typography>
-                              <Typography variant="body2">Ticket ID: {ticket.ticketId}</Typography>
-                              <Typography variant="body2">Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}</Typography>
+                            <Box sx={{
+                              width: '100%',
+                              minWidth: 0,
+                              wordBreak: 'break-word',
+                              whiteSpace: 'normal',
+                              textAlign: 'left',
+                            }}>
+                              <Typography variant="subtitle1" fontWeight={600} sx={{ wordBreak: 'break-word', whiteSpace: 'normal' }}>
+                                Registrant: {ticket.name}
+                              </Typography>
+                              <Typography variant="body2" sx={{ wordBreak: 'break-word', whiteSpace: 'normal' }}>
+                                Email: {ticket.email}
+                              </Typography>
+                              <Typography variant="body2" sx={{ wordBreak: 'break-word', whiteSpace: 'normal' }}>
+                                Ticket ID: {ticket.ticketId}
+                              </Typography>
+                              <Typography variant="body2" sx={{ wordBreak: 'break-word', whiteSpace: 'normal' }}>
+                                Checked In: {ticket.checkedIn === 'TRUE' ? 'Yes' : 'No'}
+                              </Typography>
                               {ticket.checkInTime && (
-                                <Typography variant="body2">Time: {ticket.checkInTime}</Typography>
+                                <Typography variant="body2" sx={{ wordBreak: 'break-word', whiteSpace: 'normal' }}>
+                                  Time: {ticket.checkInTime}
+                                </Typography>
                               )}
                             </Box>
                           }

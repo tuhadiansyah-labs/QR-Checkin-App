@@ -70,12 +70,22 @@ function SingleCheckIn() {
           {!confirmation && (
             <>
               {!loading && (
-                <Typography variant="body1" gutterBottom align="center" sx={{ mx: { xs: 2, sm: 4 } }}>
-                  Scan a ticket QR code to verify and check in a single guest.
-                </Typography>
+                <>
+                  <Typography variant="body1" gutterBottom align="center" sx={{ mx: { xs: 2, sm: 4 } }}>
+                    Scan a ticket QR code to verify and check in a single guest.
+                  </Typography>
+                  <QrReader onScan={handleScan} />
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ mt: 3, py: 2, fontSize: '1.1rem', borderRadius: 2 }}
+                    onClick={() => navigate('/')}
+                  >
+                    Back to Home
+                  </Button>
+                </>
               )}
               {loading && <CircularProgress sx={{ mt: 4 }} />}
-              {!loading && <QrReader onScan={handleScan} />}
             </>
           )}
           {confirmation && (
