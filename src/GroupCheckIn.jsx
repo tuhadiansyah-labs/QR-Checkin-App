@@ -268,17 +268,27 @@ function GroupCheckIn() {
                       {idx < groupGuests.length - 1 && <Divider />}
                     </div>
                   ))}
+                  <ListItem disableGutters disablePadding>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{
+                        mt: 3,
+                        mb: 2,
+                        mx: 'auto',
+                        py: 2,
+                        fontSize: '1.1rem',
+                        borderRadius: 2,
+                        width: '100%',
+                        maxWidth: 360,
+                        display: 'block',
+                      }}
+                      onClick={() => setGroupGuests(null)}
+                    >
+                      Scan Another Group
+                    </Button>
+                  </ListItem>
                 </List>
-              </Box>
-              <Box sx={{ flexShrink: 0, width: '100%', mb: 2 }}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{ mt: 2, ml: 2, mr: 2, py: 2, fontSize: '1.1rem', borderRadius: 2, width: 'calc(100% - 32px)' }}
-                  onClick={() => setGroupGuests(null)}
-                >
-                  Scan Another Group
-                </Button>
               </Box>
             </Box>
           )}
